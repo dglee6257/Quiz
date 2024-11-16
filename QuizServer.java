@@ -15,13 +15,13 @@ public class QuizServer {
         ExecutorService pool = Executors.newFixedThreadPool(20);
         while (true){
             Socket socket = listener.accept();
-            pool.execute(new Capitalizer(socket));
+            pool.execute(new Multithread(socket));
         }
     }
 
-    private static class Capitalizer implements Runnable {
+    private static class Multithread implements Runnable {
         private Socket socket;
-        Capitalizer(Socket socket) {
+        Multithread(Socket socket) {
         this.socket = socket;
         }
 

@@ -6,19 +6,35 @@ import java.net.*;
  * and displays feedback and the final score.
  */
 public class QuizClient {
-
+    private static String serverIP; 
+    private static int serverPort;
     public static void main(String[] args) {
         BufferedReader in = null;
         BufferedReader stin = null;
         PrintWriter out = null;
 
         Socket socket = null;
-
+        
         try {
-            socket = new Socket("localhost", 8888);
+            try {
+                BufferedReader br = new BufferedReader(new FileReader("server_info.dat"));
+                serverIP = br.readLine();
+                String portString = br.readLine();
+                if (portString != null) {
+                    serverPort = Integer.parseInt(portString.trim());
+                } else {
+                    throw new NumberFormatException("Port number is missing in file");
+                }
+                socket = new Socket(serverIP, serverPort);
+            } catch (IOException | NumberFormatException e) {
+                System.out.println("File doesn't exist or invalid port. Connect to default IP and port number");
+                socket = new Socket("localhost", 8888);
+            }
+            
+            
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             stin = new BufferedReader(new InputStreamReader(System.in));
-            out = new PrintWriter(socket.getOutputStream(), true); // autoFlush=true
+            out = new PrintWriter(socket.getOutputStream(), true); 
 
             String inputMessage;
             String outputMessage;
